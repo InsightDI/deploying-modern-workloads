@@ -89,13 +89,13 @@ resource "azurerm_container_group" "app" {
   restart_policy      = "OnFailure"
 
   container {
-    name = "hello-world"
-    image = "microsoft/aci-helloworld:latest"
-    cpu = "0.5"
+    name   = "hello-world"
+    image  = "microsoft/aci-helloworld:latest"
+    cpu    = "0.5"
     memory = "1.5"
 
     ports {
-      port = 80
+      port     = 80
       protocol = "TCP"
     }
   }
@@ -114,23 +114,23 @@ resource "azurerm_firewall_policy" "app" {
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "app" {
-  name                = "app-fw-policy"
-  firewall_policy_id  = azurerm_firewall_policy.app.id
-  priority            = 301
+  name               = "app-fw-policy"
+  firewall_policy_id = azurerm_firewall_policy.app.id
+  priority           = 301
 
   nat_rule_collection {
-    name = "allow-http-inbound"
+    name     = "allow-http-inbound"
     priority = 300
-    action = "Dnat"
+    action   = "Dnat"
 
     rule {
-      name = "allow-http-inbound-dnat"
-      protocols = ["TCP"]
-      source_addresses = ["*"]
+      name                = "allow-http-inbound-dnat"
+      protocols           = ["TCP"]
+      source_addresses    = ["*"]
       destination_address = azurerm_public_ip.firewall.ip_address
-      destination_ports = ["80"]
-      translated_address = azurerm_container_group.app.ip_address
-      translated_port = "80"
+      destination_ports   = ["80"]
+      translated_address  = azurerm_container_group.app.ip_address
+      translated_port     = "80"
     }
   }
 }

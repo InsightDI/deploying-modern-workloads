@@ -74,7 +74,7 @@ resource "azurerm_monitor_diagnostic_setting" "hub_storage" {
     enabled  = true
 
     retention_policy {
-      days = 0
+      days    = 0
       enabled = false
     }
   }
@@ -84,7 +84,7 @@ resource "azurerm_monitor_diagnostic_setting" "hub_storage" {
     enabled  = true
 
     retention_policy {
-      days = 0
+      days    = 0
       enabled = false
     }
   }
