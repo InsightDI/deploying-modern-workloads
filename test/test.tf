@@ -40,3 +40,19 @@ module "lab" {
 
   prefix = "test"
 }
+
+output "app_url" {
+  value = module.lab.app_url
+}
+
+output "app_ip" {
+  value = module.lab.app_ip
+}
+
+output "aci_ip" {
+  value = module.lab.aci_ip
+}
+
+output "firewall_ip" {
+  value = module.lab.firewall_ip
+}
