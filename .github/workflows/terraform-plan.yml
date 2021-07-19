@@ -34,12 +34,18 @@ jobs:
       #     tf_actions_comment: true
       #     args: '-backend-config="resource_group_name=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub" -backend-config="storage_account_name=${{ github.event.inputs.namePrefix }}state${{ github.event.inputs.nameDigits }}" -backend-config="container_name=terraform-backend" -backend-config="key=terraform.tfstate"'
 
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
 
+      - name: Terraform Init
+        run: terraform init -backend-config="resource_group_name=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub" -backend-config="storage_account_name=${{ github.event.inputs.namePrefix }}state${{ github.event.inputs.nameDigits }}" -backend-config="container_name=terraform-backend" -backend-config="key=terraform.tfstate"
+
+      - name: Terraform Plan
+        run: terraform plan -var 'hub_resource_group=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub' -var 'spoke_resource_group=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-spoke' -var 'prefix=${{ github.event.inputs.namePrefix }}'
       # - name: Terraform Format
       #   run: terraform fmt -check
-
       # - name: Terraform Plan
       #   run: terraform plan
       # - name: 'Terraform Plan'
@@ -49,16 +55,14 @@ jobs:
       #     tf_actions_subcommand: 'plan'
       #     tf_actions_working_dir: '.'
       #     tf_actions_comment: true
-
-      - name: Log in with Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.DMW_AZURE_CREDENTIALS }}
-
-      - name: Azure CLI script
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.0.72
-          inlineScript: |
-            az account show
-            az storage -h
+      # - name: Log in with Azure
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.DMW_AZURE_CREDENTIALS }}
+      # - name: Azure CLI script
+      #   uses: azure/CLI@v1
+      #   with:
+      #     azcliversion: 2.0.72
+      #     inlineScript: |
+      #       az account show
+      #       az storage -h
