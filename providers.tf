@@ -10,6 +10,10 @@ terraform {
       version = "~> 3.1.0"
     }
   }
+
+  backend "azurerm" {
+    use_azuread_auth = true
+  }
 }
 
 provider "azurerm" {
@@ -21,3 +25,5 @@ provider "azurerm" {
     }
   }
 }
+
+provider "azuread" {}
