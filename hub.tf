@@ -47,7 +47,7 @@ resource "azurerm_virtual_network_peering" "hub" {
 }
 
 resource "azurerm_log_analytics_workspace" "hub" {
-  name                = format("%s-%s", var.prefix, "logging")
+  name                = format("%s-%s-%s", var.prefix, "logging", random_integer.hub.result)
   resource_group_name = var.hub_resource_group
   location            = var.location
 
