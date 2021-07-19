@@ -1,7 +1,14 @@
 name: Terraform Plan
 
-on: workflow_dispatch
-
+on:
+  workflow_dispatch:
+    inputs:
+      namePrefix:
+        description: "Prefix for naming"
+        required: true
+      nameDigits:
+        description: "The digits used for unique naming"
+        required: true
 jobs:
   terraform:
     runs-on: ubuntu-latest
@@ -11,6 +18,9 @@ jobs:
       ARM_CLIENT_SECRET: ${{secrets.DMW_ARM_CLIENT_SECRET}}
       ARM_SUBSCRIPTION_ID: ${{secrets.DMW_ARM_SUBSCRIPTION_ID}}
       ARM_TENANT_ID: ${{secrets.DMW_ARM_TENANT_ID}}
+      TF_VAR_hub_resource_group: "dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub"
+      TF_VAR_spoke_resource_group: "dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-spoke"
+      TF_VAR_prefix: "${{ github.event.inputs.namePrefix }}"
 
     steps:
       - uses: actions/checkout@v2
@@ -20,6 +30,8 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        with:
+          args: '-backend-config="resource_group_name=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub" -backend-config="storage_account_name=${{ github.event.inputs.namePrefix }}state${{ github.event.inputs.nameDigits }}" -backend-config="container_name=terraform-backend" -backend-config="key=terraform.tfstate"'
 
       - name: Terraform Format
         run: terraform fmt -check
