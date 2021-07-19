@@ -29,9 +29,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Terraform Init
-        run: terraform init
-        with:
-          args: '-backend-config="resource_group_name=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub" -backend-config="storage_account_name=${{ github.event.inputs.namePrefix }}state${{ github.event.inputs.nameDigits }}" -backend-config="container_name=terraform-backend" -backend-config="key=terraform.tfstate"'
+        run: terraform init -backend-config="resource_group_name=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub" -backend-config="storage_account_name=${{ github.event.inputs.namePrefix }}state${{ github.event.inputs.nameDigits }}" -backend-config="container_name=terraform-backend" -backend-config="key=terraform.tfstate"
 
       - name: Terraform Format
         run: terraform fmt -check
