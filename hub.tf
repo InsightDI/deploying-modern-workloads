@@ -89,24 +89,3 @@ resource "azurerm_monitor_diagnostic_setting" "hub_storage" {
     }
   }
 }
-
-resource "azurerm_public_ip" "firewall" {
-  name                = format("%s%s", "firewallpip", random_integer.hub.result)
-  location            = var.location
-  resource_group_name = var.hub_resource_group
-  allocation_method   = "Static"
-  sku                 = "Standard"
-  domain_name_label   = format("%s-%s", var.prefix, "app")
-}
-
-resource "azurerm_firewall" "hub" {
-  name                = format("%s%s", "firewall", random_integer.hub.result)
-  location            = var.location
-  resource_group_name = var.hub_resource_group
-
-  ip_configuration {
-    name                 = "firewall"
-    subnet_id            = azurerm_subnet.firewall.id
-    public_ip_address_id = azurerm_public_ip.firewall.id
-  }
-}
