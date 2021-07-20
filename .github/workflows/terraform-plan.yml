@@ -41,7 +41,7 @@ jobs:
       - name: Terraform Init
         # 'run' specifies the command that will be run.  The 'terraform init' accepts various '-backend-config'
         # values, which specify where the backend state will be stored.
-        run: terraform init -backend-config="resource_group_name=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub" -backend-config="storage_account_name=${{ github.event.inputs.namePrefix }}cloudshell${{ github.event.inputs.nameDigits }}" -backend-config="container_name=terraform-backend" -backend-config="key=terraform.tfstate"
+        run: terraform init -backend-config="resource_group_name=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub" -backend-config="storage_account_name=${{ github.event.inputs.namePrefix }}cloudshell${{ github.event.inputs.nameDigits }}" -backend-config="container_name=terraform-state" -backend-config="key=terraform.tfstate"
 
       # Execute 'terraform plan' and pass your '.tfvars' file with your deployment configuration values.
       - name: Terraform Plan
