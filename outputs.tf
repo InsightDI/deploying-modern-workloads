@@ -1,3 +1,3 @@
 output "app_url" {
-  value = azurerm_container_group.app.fqdn
+  value = format("http://%s", azurerm_container_group.app.fqdn)
 }
