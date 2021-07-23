@@ -226,6 +226,13 @@ terraform apply myplan.tfplan
    - Note: when clicking the url from Cloud Shell, you may see an errant `"` at the end of your url in the address bar - be sure to remove that and try your url again!
 1. Navigate to the [Azure Portal](https://portal.azure.com) and checkout your resources Terraform deployed for you in the spoke resource group
 
+## Run Terraform Apply again - seeing any changes?
+1. From Cloud Shell, within the `terraform-intro` directory, run the following to plan and apply with auto approval:
+```
+terraform apply -auto-approve
+```
+1. Note what Terraform does when there are no changes amongst your Terraform code, the state file, and Azure
+
 ## Explore Terraform state
 Terraform uses a state file to keep track of its last-known state of resources it has applied. The statefile is important because it allows future Terraform plans and applies to happen incrementally and keeps your infrastructure idempotent.
 1. After each Terraform apply, a statefile version is created. If it's the first apply, the statefile itself is also created.
