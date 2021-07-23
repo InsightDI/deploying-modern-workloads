@@ -1,68 +1,48 @@
 name: Terraform Plan
 
 on:
-  workflow_dispatch:
-    inputs:
+  workflow_dispatch: # This configures the GitHub workflow to be triggered manually in the GitHub UI.
+    inputs: # For declaring input parameters.
       namePrefix:
         description: "Prefix for naming"
         required: true
       nameDigits:
         description: "The digits used for unique naming"
         required: true
+      tfvarsFile:
+        description: "'.tfvars' file with variable values"
+        required: true
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
-    env:
+    env: # Sets up environment variables.
       ARM_CLIENT_ID: ${{secrets.DMW_ARM_CLIENT_ID}}
       ARM_CLIENT_SECRET: ${{secrets.DMW_ARM_CLIENT_SECRET}}
       ARM_SUBSCRIPTION_ID: ${{secrets.DMW_ARM_SUBSCRIPTION_ID}}
       ARM_TENANT_ID: ${{secrets.DMW_ARM_TENANT_ID}}
-      TF_VAR_hub_resource_group: "dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub"
-      TF_VAR_spoke_resource_group: "dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-spoke"
-      TF_VAR_prefix: "${{ github.event.inputs.namePrefix }}"
 
     steps:
       - uses: actions/checkout@v2
 
-      # - name: 'Terraform Init'
-      #   uses: hashicorp/terraform-github-actions@master
-      #   with:
-      #     tf_actions_version: 1.0.2
-      #     tf_actions_subcommand: 'init'
-      #     tf_actions_working_dir: '.'
-      #     tf_actions_comment: true
-      #     args: '-backend-config="resource_group_name=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub" -backend-config="storage_account_name=${{ github.event.inputs.namePrefix }}cloudshell${{ github.event.inputs.nameDigits }}" -backend-config="container_name=terraform-backend" -backend-config="key=terraform.tfstate"'
-
+      # Initialize the 'Terraform Setup' GitHub Action, which installs Terraform on the GitHub Action container.
       - name: Setup Terraform
+        # The 'uses' clause identifies where this GitHub Action can be found.
+        # E.g., https://github.com/hashicorp/setup-terraform
         uses: hashicorp/setup-terraform@v1
+        # The 'with' clause is for passing configuration values to the Action.
         with:
+          # This allows us to use remote state in Azure storage instead of Terraform Cloud or Terraform Enterprise.
           terraform_wrapper: false
 
+      # Execute `terraform init`, which parses the Terraform code and initializes the requested Terraform providers
+      # (like 'azurerm') and also initializes the backend state store (Azure storage in this case).
       - name: Terraform Init
-        run: terraform init -backend-config="resource_group_name=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub" -backend-config="storage_account_name=${{ github.event.inputs.namePrefix }}cloudshell${{ github.event.inputs.nameDigits }}" -backend-config="container_name=terraform-backend" -backend-config="key=terraform.tfstate"
+        # 'run' specifies the command that will be run.  The 'terraform init' accepts various '-backend-config'
+        # values, which specify where the backend state will be stored.
+        run: terraform init -backend-config="resource_group_name=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub" -backend-config="storage_account_name=${{ github.event.inputs.namePrefix }}cloudshell${{ github.event.inputs.nameDigits }}" -backend-config="container_name=terraform-state" -backend-config="key=terraform.tfstate"
 
+      # Execute 'terraform plan' and pass your '.tfvars' file with your deployment configuration values.
       - name: Terraform Plan
-        run: terraform plan -var 'hub_resource_group=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-hub' -var 'spoke_resource_group=dmw-lab-${{ github.event.inputs.nameDigits }}-${{ github.event.inputs.namePrefix }}-spoke' -var 'prefix=${{ github.event.inputs.namePrefix }}'
-      # - name: Terraform Format
-      #   run: terraform fmt -check
-      # - name: Terraform Plan
-      #   run: terraform plan
-      # - name: 'Terraform Plan'
-      #   uses: hashicorp/terraform-github-actions@master
-      #   with:
-      #     tf_actions_version: 1.0.2
-      #     tf_actions_subcommand: 'plan'
-      #     tf_actions_working_dir: '.'
-      #     tf_actions_comment: true
-      # - name: Log in with Azure
-      #   uses: azure/login@v1
-      #   with:
-      #     creds: ${{ secrets.DMW_AZURE_CREDENTIALS }}
-      # - name: Azure CLI script
-      #   uses: azure/CLI@v1
-      #   with:
-      #     azcliversion: 2.0.72
-      #     inlineScript: |
-      #       az account show
-      #       az storage -h
+        run: terraform plan -var-file '${{ github.event.inputs.tfvarsFile }}'
