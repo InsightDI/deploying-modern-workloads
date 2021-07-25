@@ -343,7 +343,7 @@ Finally it creates an Azure Container Instance and configures its networking.
 
 # Lab 3: GitHub
 
-## Review the GitHub Action code
+## Review the GitHub workflow code
 
 In the following steps you will review the first GitHub workflow.
 
@@ -359,7 +359,7 @@ In the following steps you will review the first GitHub workflow.
 
 1. Within the `workflows` folder open the `terraform-plan.yml` file.
 
-1. The file is somewhat self-documenting, but see below for some highlights.  (Complete GitHub Action syntax can be found [here](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions).)  
+1. The file is somewhat self-documenting, but see below for some highlights.  (Complete GitHub workflow syntax can be found [here](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions).)  
    1. `on`: For declaring workflow triggers.  
    1. `jobs`: The list of jobs that run within the workflow.  Each job is composed of multiple steps.  This job includes steps that 1) check out the source code, 2) install Terraform, 3) execute `terraform init` and 4) execute `terraform plan`.  
    1. Note how the `env:` property configures environment variables for the subsequent steps.  The Azure provider for Terraform uses these environment variables to connect to the Azure subscription.  For example, the `ARM_CLIENT_ID: ${{secrets.DMW_ARM_CLIENT_ID}}` code sets an environment variable named "ARM_CLIENT_ID" to the secret value named "DMW_ARM_CLIENT_ID".  You will configure these secrets in the next section of the lab.
@@ -400,7 +400,7 @@ In the following steps you will review the first GitHub workflow.
 
 1. Next, to populate the "DMW_ARM_SUBSCRIPTION_ID" and "DMW_ARM_TENANT_ID" secrets, let's use another common Azure CLI command.  To get the subscription ID and tenant ID, return to the Azure portal and open Cloud Shell.  Then execute the following command: `az account show`.  The command will return a JSON object.  The "id" property is the subscription ID and the "tenantId" property is the tenant ID.  Copy their values to add the two new GitHub secrets.  (Do NOT copy the quotes!)
 
-## Execute the GitHub Action to Run the Terraform Deployment
+## Execute the GitHub Workflow to Run the Terraform Deployment
 
 In this portion of the lab we'll first create a `.tfvars` file with the detailed configuration of our deployment, and then we'll execute the Terraform deployment using a GitHub workflow.  (Read [here](https://www.terraform.io/docs/language/values/variables.html#variable-definitions-tfvars-files) for details on `.tfvars` files.)
 
