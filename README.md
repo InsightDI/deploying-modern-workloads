@@ -477,4 +477,4 @@ In this final portion of the lab we will leverage the GitHub workflows you revie
 
 You've done it!  You've completed the labs in the "Deploying Modern Workloads" workshop!  We sincerely hope you learned a lot and enjoyed the experience.
 
-You have the lab code and all the references to helpful Azure, Terraform and GitHub documentation.  We hope that will help kickstart your automation efforts.  Please reach out if every we can help accelerate your automation journey!
+You have the lab code and all the references to helpful Azure, Terraform and GitHub documentation.  We hope that will help kickstart your automation efforts.  Please reach out if ever we can help accelerate your automation journey!
