@@ -102,7 +102,7 @@ Terraform ships as a binary - a single executable file. This binary is used to d
    terraform
    ```
 1. Make note of the `Main commands` section - we will be using a number of these during the lab.
-1. Take quick glance over the `All other commands` section as well
+1. Take a quick glance over the `All other commands` section as well
 1. Determine the version of Terraform running in Cloud Shell:  
    ```
    terraform version
