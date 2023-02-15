@@ -58,7 +58,7 @@ resource "azurerm_container_group" "app" {
 
   container {
     name   = "hello-world"
-    image  = "microsoft/aci-helloworld:latest"
+    image  = "mcr.microsoft.com/azuredocs/aci-helloworld"
     cpu    = "0.5"
     memory = "1.5"
 
