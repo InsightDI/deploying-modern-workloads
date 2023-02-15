@@ -45,4 +45,6 @@ jobs:
 
       # Execute 'terraform plan' and pass your '.tfvars' file with your deployment configuration values.
       - name: Terraform Plan
-        run: terraform plan -var-file '${{ github.event.inputs.tfvarsFile }}'
+        run: |
+          terraform validate
+          terraform plan -var-file '${{ github.event.inputs.tfvarsFile }}'
